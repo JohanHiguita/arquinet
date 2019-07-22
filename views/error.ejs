@@ -1,0 +1,22 @@
+<!-- extends layout
+
+block content
+  h1= message
+  h2= error.status
+  pre #{error.stack} -->
+
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <!-- <% //include head %> -->
+  </head>
+  <body>
+    <h1>Message</h1>
+    
+    <p><%= error.status %></p>
+    <p><%= error.stack %></p>
+    
+  </body>
+  </html>
+
