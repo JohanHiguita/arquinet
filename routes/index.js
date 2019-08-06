@@ -1,18 +1,24 @@
-var express = require('express');
-var router = express.Router();
+var express = require("express")
+var router = express.Router()
 const passport = require("passport")
 
-/* GET home page. */
-/* router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-}); */
+/* Auth Routes */
 
-router.get('/', function(req, res, next) {
-  res.render('home', { user: req.user });
-});
+router.get(
+  "/",
+  require("connect-ensure-login").ensureLoggedIn(),
+  (req, res) => {
+    res.render("home", { user: req.user })
+  }
+)
 
 router.get("/login", function(req, res) {
   res.render("login")
+})
+
+router.get("/logout", (req, res) => {
+  req.logout()
+  res.redirect("/")
 })
 
 router.get(
@@ -29,11 +35,12 @@ router.get(
 )
 
 router.get(
-  "/profile", 
+  "/profile",
   require("connect-ensure-login").ensureLoggedIn(),
-  function(req,res) {
+  function(req, res) {
+    console.log(req.user)
     res.render("profile", { user: req.user })
   }
 )
 
-module.exports = router;
+module.exports = router

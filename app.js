@@ -1,5 +1,5 @@
+//DEBUG=arquinet:* npm run devstart 
 require("dotenv").config()
-
 const createError = require("http-errors")
 const express = require("express")
 const path = require("path")
@@ -22,10 +22,15 @@ app.set("view engine", "ejs")
 
 app.use(
   cookieSession({
-    maxAge: 24 * 60 * 60 * 100,
+    maxAge: 24 * 60 * 60 * 1000,
     keys: [process.env.COOKIE_KEY]
+    
   })
 )
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize())
+app.use(passport.session())
 
 //connect to mongoDB
 mongoose.connect(process.env.MONGO_URI, () => {
@@ -34,7 +39,7 @@ mongoose.connect(process.env.MONGO_URI, () => {
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
-app.use(require("morgan")("combined"))
+/* app.use(require("morgan")("combined"))
 app.use(require("cookie-parser")())
 app.use(require("body-parser").urlencoded({ extended: true }))
 app.use(
@@ -43,20 +48,17 @@ app.use(
     resave: true,
     saveUninitialized: true
   })
-)
+) */
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger("dev"))
+/* app.use(logger("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "public"))) */
 
-// Initialize Passport and restore authentication state, if any, from the
-// session.
-app.use(passport.initialize())
-app.use(passport.session())
 
 app.use("/", indexRouter)
 app.use("/users", usersRouter)

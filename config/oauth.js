@@ -2,7 +2,18 @@ const passport = require("passport")
 const GoogleStrategy = require("passport-google-oauth20").Strategy
 const User = require("../models/user")
 
-console.log("data: "+process.env.GOOGLE_CLIENT_ID)
+//this attach user to req: req.user
+passport.serializeUser((user, done) => {
+  done(null, user.id)
+})
+
+passport.deserializeUser((id, done) => {
+  User.findById(id).then((user)=>{
+    done(null, user)
+  })
+  
+})
+
 
 passport.use(
   new GoogleStrategy(
@@ -12,22 +23,21 @@ passport.use(
       callbackURL: "/return"
     },
     function(accessToken, refreshToken, profile, done) {
-      /* User.findOrCreate({ googleId: profile.id }, function(err, user) {
-          return done(err, user)
-        }) */
-      //console.log(profile)
-      //check if user already exist in db
+      
       User.findOne({ googleId: profile.id }).then(currentUser => {
         if (currentUser) {
           //already have the user
+          //here we have to update user
           console.log(`user is: ${currentUser}`)
           done(null, currentUser)
         } else {
-
           //create user in db
+          console.log(profile)
           new User({
             username: profile.displayName,
-            googleId: profile.id
+            googleId: profile.id,
+            email: profile._json.email,
+            picture: profile._json.picture
           })
             .save()
             .then(newUser => {
@@ -40,13 +50,3 @@ passport.use(
     }
   )
 )
-
-
-//this attach user to req: req.user
-passport.serializeUser(function(user, done) {
-  done(null, user)
-})
-
-passport.deserializeUser(function(obj, done) {
-done(null, obj)
-})

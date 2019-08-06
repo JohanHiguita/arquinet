@@ -6,7 +6,10 @@ const userSchema = new Schema({
     googleId: String,
     username: String,
     isAdmin: Boolean,
-    points: Number,
+    email: String,
+    picture: String,
+    retos : [{ type: Schema.Types.ObjectId, ref: 'Reto' }]
+    //points: virtual
 
     //done_challenges: Objs
     //medals: Objs
