@@ -5,9 +5,12 @@ const userSchema = new Schema({
 
     googleId: String,
     username: String,
-    isAdmin: Boolean,
     email: String,
     picture: String,
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
     retos : [{ type: Schema.Types.ObjectId, ref: 'Reto' }],
     has_admin_validation: { type: Boolean, default: false }
 })
